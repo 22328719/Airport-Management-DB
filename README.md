@@ -1,2 +1,2 @@
 # Airport-Management-DB
-Cyprus International University CMPE343 Term Project
+Cyprus International University CMPE343 Project
