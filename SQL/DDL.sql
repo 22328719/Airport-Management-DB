@@ -3,8 +3,6 @@ DROP DATABASE IF EXISTS airport_management;
 CREATE DATABASE airport_management CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE airport_management;
 
--- TABLE 1: PlaneModel
--- Stores airplane model information
 CREATE TABLE PlaneModel (
     model_id        INT             AUTO_INCREMENT,
     model_name      VARCHAR(100)    NOT NULL,
@@ -17,8 +15,6 @@ CREATE TABLE PlaneModel (
     CONSTRAINT uq_planemodel_name UNIQUE (manufacturer, model_name)
 );
 
--- TABLE 2: Airplane
--- Stores individual airplane instances
 CREATE TABLE Airplane (
     plane_no            VARCHAR(20)     NOT NULL COMMENT 'Tail/registration number',
     model_id            INT             NOT NULL,
@@ -33,8 +29,7 @@ CREATE TABLE Airplane (
         REFERENCES PlaneModel(model_id)
         ON UPDATE CASCADE ON DELETE RESTRICT
 );
--- TABLE 3: Hangar
--- Stores hangar/parking location details
+
 CREATE TABLE Hangar (
     hangar_no       VARCHAR(10)     NOT NULL,
     location        VARCHAR(200)    NOT NULL COMMENT 'Physical description or coordinates',
@@ -45,8 +40,7 @@ CREATE TABLE Hangar (
     is_active       TINYINT(1)      NOT NULL DEFAULT 1,
     CONSTRAINT pk_hangar PRIMARY KEY (hangar_no)
 );
--- TABLE 4: HangarStay
--- Records each airplane stay period in a hangar
+
 CREATE TABLE HangarStay (
     stay_id         INT             AUTO_INCREMENT,
     plane_no        VARCHAR(20)     NOT NULL,
@@ -66,8 +60,6 @@ CREATE TABLE HangarStay (
     )
 );
 
--- TABLE 5: Test
--- Defines the types of airworthiness tests
 CREATE TABLE Test (
     test_id         INT             AUTO_INCREMENT,
     test_name       VARCHAR(100)    NOT NULL,
@@ -80,8 +72,7 @@ CREATE TABLE Test (
     CONSTRAINT uq_test_name UNIQUE (test_name),
     CONSTRAINT chk_threshold CHECK (pass_threshold <= max_score AND pass_threshold >= 0)
 );
--- TABLE 6: Union
--- Stores union information
+
 CREATE TABLE UnionInfo (
     union_id        INT             AUTO_INCREMENT,
     union_name      VARCHAR(150)    NOT NULL,
@@ -90,8 +81,7 @@ CREATE TABLE UnionInfo (
     CONSTRAINT pk_union PRIMARY KEY (union_id),
     CONSTRAINT uq_union_code UNIQUE (union_code)
 );
--- TABLE 7: Employee
--- Central table for all airport staff
+
 CREATE TABLE Employee (
     ssn                 CHAR(11)        NOT NULL COMMENT 'Format: XXX-XX-XXXX',
     full_name           VARCHAR(150)    NOT NULL,
@@ -111,8 +101,7 @@ CREATE TABLE Employee (
         ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT chk_ssn_format CHECK (ssn REGEXP '^[0-9]{3}-[0-9]{2}-[0-9]{4}$')
 );
--- TABLE 8: Technician
--- Subtype of Employee (IS-A relationship)
+
 CREATE TABLE Technician (
     ssn             CHAR(11)        NOT NULL,
     certification   VARCHAR(100)    COMMENT 'e.g. FAA A&P, EASA Part-66',
@@ -123,7 +112,7 @@ CREATE TABLE Technician (
         REFERENCES Employee(ssn)
         ON UPDATE CASCADE ON DELETE CASCADE
 );
--- TABLE 9: TechnicianExpertise
+
 
 CREATE TABLE TechnicianExpertise (
     ssn             CHAR(11)        NOT NULL,
@@ -138,8 +127,8 @@ CREATE TABLE TechnicianExpertise (
         REFERENCES PlaneModel(model_id)
         ON UPDATE CASCADE ON DELETE CASCADE
 );
--- TABLE 10: TrafficController
--- Subtype of Employee (IS-A relationship)CREATE TABLE TrafficController 
+
+CREATE TABLE TrafficController (
     ssn                 CHAR(11)        NOT NULL,
     last_medical_exam   DATE            NOT NULL,
     license_no          VARCHAR(50)     NOT NULL,
@@ -151,9 +140,6 @@ CREATE TABLE TechnicianExpertise (
         REFERENCES Employee(ssn)
         ON UPDATE CASCADE ON DELETE CASCADE
 );
-
--- TABLE 11: TestEvent
--- Records each airplane testing event (ternary relationship)
 
 CREATE TABLE TestEvent (
     event_id        INT             AUTO_INCREMENT,
@@ -177,8 +163,7 @@ CREATE TABLE TestEvent (
         REFERENCES Test(test_id)
         ON UPDATE CASCADE ON DELETE RESTRICT
 );
--- TABLE 12: Flight (Extension - real-life database)
--- Stores flight scheduling and operation records
+
 CREATE TABLE Flight (
     flight_id       INT             AUTO_INCREMENT,
     flight_no       VARCHAR(10)     NOT NULL,
@@ -198,7 +183,7 @@ CREATE TABLE Flight (
         ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT chk_flight_times CHECK (scheduled_arr > scheduled_dep)
 );
--- INDEXES for performance
+
 CREATE INDEX idx_airplane_model     ON Airplane(model_id);
 CREATE INDEX idx_airplane_status    ON Airplane(status);
 CREATE INDEX idx_hangarstay_plane   ON HangarStay(plane_no);
