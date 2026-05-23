@@ -7,16 +7,16 @@ CREATE TABLE PlaneModel (
     model_id        INT             AUTO_INCREMENT,
     model_name      VARCHAR(100)    NOT NULL,
     manufacturer    VARCHAR(100)    NOT NULL,
-    category        VARCHAR(50)     NOT NULL COMMENT 'e.g. Narrow-body, Wide-body, Regional',
+    category        VARCHAR(50)     NOT NULL,
     max_range_km    INT             NOT NULL CHECK (max_range_km > 0),
-    engine_type     VARCHAR(50)     NOT NULL COMMENT 'e.g. Turbofan, Turboprop, Piston',
+    engine_type     VARCHAR(50)     NOT NULL,
     created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_planemodel PRIMARY KEY (model_id),
     CONSTRAINT uq_planemodel_name UNIQUE (manufacturer, model_name)
 );
 
 CREATE TABLE Airplane (
-    plane_no            VARCHAR(20)     NOT NULL COMMENT 'Tail/registration number',
+    plane_no            VARCHAR(20)     NOT NULL,
     model_id            INT             NOT NULL,
     capacity            INT             NOT NULL CHECK (capacity > 0),
     year_manufactured   YEAR            NOT NULL,
@@ -32,9 +32,8 @@ CREATE TABLE Airplane (
 
 CREATE TABLE Hangar (
     hangar_no       VARCHAR(10)     NOT NULL,
-    location        VARCHAR(200)    NOT NULL COMMENT 'Physical description or coordinates',
-    capacity        INT             NOT NULL CHECK (capacity > 0)
-                                    COMMENT 'Max number of planes',
+    location        VARCHAR(200)    NOT NULL,
+    capacity        INT             NOT NULL CHECK (capacity > 0),
     hangar_type     ENUM('Maintenance','Storage','Both')
                                     NOT NULL DEFAULT 'Both',
     is_active       TINYINT(1)      NOT NULL DEFAULT 1,
@@ -46,7 +45,7 @@ CREATE TABLE HangarStay (
     plane_no        VARCHAR(20)     NOT NULL,
     hangar_no       VARCHAR(10)     NOT NULL,
     in_datetime     DATETIME        NOT NULL,
-    out_datetime    DATETIME        NULL COMMENT 'NULL = airplane currently in this hangar',
+    out_datetime    DATETIME        NULL,
     notes           TEXT,
     CONSTRAINT pk_hangarstay PRIMARY KEY (stay_id),
     CONSTRAINT fk_stay_plane FOREIGN KEY (plane_no)
@@ -65,8 +64,8 @@ CREATE TABLE Test (
     test_name       VARCHAR(100)    NOT NULL,
     description     TEXT,
     max_score       DECIMAL(5,2)    NOT NULL CHECK (max_score > 0),
-    pass_threshold  DECIMAL(5,2)    NOT NULL COMMENT 'Minimum score to pass',
-    frequency_days  INT             NOT NULL COMMENT 'Recommended test interval in days',
+    pass_threshold  DECIMAL(5,2)    NOT NULL,
+    frequency_days  INT             NOT NULL,
     created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_test PRIMARY KEY (test_id),
     CONSTRAINT uq_test_name UNIQUE (test_name),
@@ -83,7 +82,7 @@ CREATE TABLE UnionInfo (
 );
 
 CREATE TABLE Employee (
-    ssn                 CHAR(11)        NOT NULL COMMENT 'Format: XXX-XX-XXXX',
+    ssn                 CHAR(11)        NOT NULL,
     full_name           VARCHAR(150)    NOT NULL,
     union_membership_no VARCHAR(30)     NOT NULL,
     union_id            INT             NOT NULL,
@@ -104,7 +103,7 @@ CREATE TABLE Employee (
 
 CREATE TABLE Technician (
     ssn             CHAR(11)        NOT NULL,
-    certification   VARCHAR(100)    COMMENT 'e.g. FAA A&P, EASA Part-66',
+    certification   VARCHAR(100),
     cert_expiry     DATE,
     specialty_note  VARCHAR(255),
     CONSTRAINT pk_technician PRIMARY KEY (ssn),
@@ -133,7 +132,7 @@ CREATE TABLE TrafficController (
     last_medical_exam   DATE            NOT NULL,
     license_no          VARCHAR(50)     NOT NULL,
     license_expiry      DATE            NOT NULL,
-    tower_assignment    VARCHAR(50)     COMMENT 'e.g. Tower, Ground, Approach',
+    tower_assignment    VARCHAR(50),
     CONSTRAINT pk_trafficcontroller PRIMARY KEY (ssn),
     CONSTRAINT uq_tc_license UNIQUE (license_no),
     CONSTRAINT fk_tc_employee FOREIGN KEY (ssn)
