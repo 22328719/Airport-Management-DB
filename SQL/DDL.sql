@@ -27,7 +27,6 @@ CREATE TABLE Airplane (
     CONSTRAINT pk_airplane PRIMARY KEY (plane_no),
     CONSTRAINT fk_airplane_model FOREIGN KEY (model_id)
         REFERENCES PlaneModel(model_id)
-        ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE Hangar (
@@ -50,10 +49,8 @@ CREATE TABLE HangarStay (
     CONSTRAINT pk_hangarstay PRIMARY KEY (stay_id),
     CONSTRAINT fk_stay_plane FOREIGN KEY (plane_no)
         REFERENCES Airplane(plane_no)
-        ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_stay_hangar FOREIGN KEY (hangar_no)
         REFERENCES Hangar(hangar_no)
-        ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT chk_stay_dates CHECK (
         out_datetime IS NULL OR out_datetime > in_datetime
     )
@@ -97,7 +94,6 @@ CREATE TABLE Employee (
     CONSTRAINT uq_employee_email UNIQUE (email),
     CONSTRAINT fk_employee_union FOREIGN KEY (union_id)
         REFERENCES UnionInfo(union_id)
-        ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT chk_ssn_format CHECK (ssn REGEXP '^[0-9]{3}-[0-9]{2}-[0-9]{4}$')
 );
 
@@ -109,7 +105,6 @@ CREATE TABLE Technician (
     CONSTRAINT pk_technician PRIMARY KEY (ssn),
     CONSTRAINT fk_technician_employee FOREIGN KEY (ssn)
         REFERENCES Employee(ssn)
-        ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -121,10 +116,8 @@ CREATE TABLE TechnicianExpertise (
     CONSTRAINT pk_techexpertise PRIMARY KEY (ssn, model_id),
     CONSTRAINT fk_expertise_tech FOREIGN KEY (ssn)
         REFERENCES Technician(ssn)
-        ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_expertise_model FOREIGN KEY (model_id)
         REFERENCES PlaneModel(model_id)
-        ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE TrafficController (
@@ -137,7 +130,6 @@ CREATE TABLE TrafficController (
     CONSTRAINT uq_tc_license UNIQUE (license_no),
     CONSTRAINT fk_tc_employee FOREIGN KEY (ssn)
         REFERENCES Employee(ssn)
-        ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE TestEvent (
@@ -154,13 +146,10 @@ CREATE TABLE TestEvent (
     CONSTRAINT pk_testevent PRIMARY KEY (event_id),
     CONSTRAINT fk_event_plane FOREIGN KEY (plane_no)
         REFERENCES Airplane(plane_no)
-        ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_event_tech FOREIGN KEY (ssn)
         REFERENCES Technician(ssn)
-        ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_event_test FOREIGN KEY (test_id)
         REFERENCES Test(test_id)
-        ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE Flight (
@@ -179,7 +168,5 @@ CREATE TABLE Flight (
     CONSTRAINT uq_flight_no_dep UNIQUE (flight_no, scheduled_dep),
     CONSTRAINT fk_flight_plane FOREIGN KEY (plane_no)
         REFERENCES Airplane(plane_no)
-        ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT chk_flight_times CHECK (scheduled_arr > scheduled_dep)
 );
-CREATE INDEX idx_flight_plane       ON Flight(plane_no);
