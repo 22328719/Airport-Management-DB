@@ -182,16 +182,4 @@ CREATE TABLE Flight (
         ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT chk_flight_times CHECK (scheduled_arr > scheduled_dep)
 );
-
-CREATE INDEX idx_airplane_model     ON Airplane(model_id);
-CREATE INDEX idx_airplane_status    ON Airplane(status);
-CREATE INDEX idx_hangarstay_plane   ON HangarStay(plane_no);
-CREATE INDEX idx_hangarstay_hangar  ON HangarStay(hangar_no);
-CREATE INDEX idx_hangarstay_in      ON HangarStay(in_datetime);
-CREATE INDEX idx_testevent_plane    ON TestEvent(plane_no);
-CREATE INDEX idx_testevent_tech     ON TestEvent(ssn);
-CREATE INDEX idx_testevent_date     ON TestEvent(event_date);
-CREATE INDEX idx_employee_name      ON Employee(full_name);
-CREATE INDEX idx_tc_exam            ON TrafficController(last_medical_exam);
-CREATE INDEX idx_flight_dep         ON Flight(scheduled_dep);
 CREATE INDEX idx_flight_plane       ON Flight(plane_no);
