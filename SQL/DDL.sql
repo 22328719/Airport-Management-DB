@@ -1,6 +1,5 @@
 
-DROP DATABASE IF EXISTS airport_management;
-CREATE DATABASE airport_management CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE airport_management;
 USE airport_management;
 
 CREATE TABLE PlaneModel (
