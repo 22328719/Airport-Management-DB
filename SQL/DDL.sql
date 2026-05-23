@@ -1,4 +1,3 @@
-
 CREATE DATABASE airport_management;
 USE airport_management;
 
@@ -47,9 +46,9 @@ CREATE TABLE HangarStay (
     notes           TEXT,
     CONSTRAINT pk_hangarstay PRIMARY KEY (stay_id),
     CONSTRAINT fk_stay_plane FOREIGN KEY (plane_no)
-        REFERENCES Airplane(plane_no)
+        REFERENCES Airplane(plane_no),
     CONSTRAINT fk_stay_hangar FOREIGN KEY (hangar_no)
-        REFERENCES Hangar(hangar_no)
+        REFERENCES Hangar(hangar_no),
     CONSTRAINT chk_stay_dates CHECK (
         out_datetime IS NULL OR out_datetime > in_datetime
     )
@@ -92,7 +91,7 @@ CREATE TABLE Employee (
     CONSTRAINT uq_employee_union UNIQUE (union_membership_no),
     CONSTRAINT uq_employee_email UNIQUE (email),
     CONSTRAINT fk_employee_union FOREIGN KEY (union_id)
-        REFERENCES UnionInfo(union_id)
+        REFERENCES UnionInfo(union_id),
     CONSTRAINT chk_ssn_format CHECK (ssn REGEXP '^[0-9]{3}-[0-9]{2}-[0-9]{4}$')
 );
 
@@ -106,7 +105,6 @@ CREATE TABLE Technician (
         REFERENCES Employee(ssn)
 );
 
-
 CREATE TABLE TechnicianExpertise (
     ssn             CHAR(11)        NOT NULL,
     model_id        INT             NOT NULL,
@@ -114,7 +112,7 @@ CREATE TABLE TechnicianExpertise (
     certified_date  DATE,
     CONSTRAINT pk_techexpertise PRIMARY KEY (ssn, model_id),
     CONSTRAINT fk_expertise_tech FOREIGN KEY (ssn)
-        REFERENCES Technician(ssn)
+        REFERENCES Technician(ssn),
     CONSTRAINT fk_expertise_model FOREIGN KEY (model_id)
         REFERENCES PlaneModel(model_id)
 );
@@ -144,9 +142,9 @@ CREATE TABLE TestEvent (
     created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_testevent PRIMARY KEY (event_id),
     CONSTRAINT fk_event_plane FOREIGN KEY (plane_no)
-        REFERENCES Airplane(plane_no)
+        REFERENCES Airplane(plane_no),
     CONSTRAINT fk_event_tech FOREIGN KEY (ssn)
-        REFERENCES Technician(ssn)
+        REFERENCES Technician(ssn),
     CONSTRAINT fk_event_test FOREIGN KEY (test_id)
         REFERENCES Test(test_id)
 );
@@ -166,6 +164,7 @@ CREATE TABLE Flight (
     CONSTRAINT pk_flight PRIMARY KEY (flight_id),
     CONSTRAINT uq_flight_no_dep UNIQUE (flight_no, scheduled_dep),
     CONSTRAINT fk_flight_plane FOREIGN KEY (plane_no)
-        REFERENCES Airplane(plane_no)
+        REFERENCES Airplane(plane_no),
     CONSTRAINT chk_flight_times CHECK (scheduled_arr > scheduled_dep)
 );
+
