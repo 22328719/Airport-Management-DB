@@ -1,5 +1,4 @@
 USE airport_management;
--- QUERY 1
 SELECT
     a.plane_no,
     pm.manufacturer,
@@ -13,7 +12,6 @@ JOIN PlaneModel pm ON a.model_id = pm.model_id
 LEFT JOIN TestEvent te ON a.plane_no = te.plane_no
 GROUP BY a.plane_no, pm.manufacturer, pm.model_name, a.status
 ORDER BY total_tests DESC, avg_score DESC;
--- QUERY 2
 SELECT
     hs.plane_no,
     pm.model_name,
@@ -29,8 +27,6 @@ JOIN PlaneModel pm ON a.model_id  = pm.model_id
 JOIN Hangar h     ON hs.hangar_no = h.hangar_no
 WHERE hs.out_datetime IS NULL
 ORDER BY hours_in_hangar DESC;
--- QUERY 3
-
 SELECT
     e.full_name                             AS technician_name,
     t.certification,
@@ -44,8 +40,6 @@ LEFT JOIN TestEvent te ON t.ssn = te.ssn
 GROUP BY e.full_name, t.certification
 HAVING tests_performed > 0
 ORDER BY total_hours_spent DESC;
--- QUERY 4
-
 SELECT
     ts.test_name,
     ts.pass_threshold,
@@ -60,7 +54,6 @@ FROM Test ts
 LEFT JOIN TestEvent te ON ts.test_id = te.test_id
 GROUP BY ts.test_name, ts.pass_threshold
 ORDER BY failure_rate_pct DESC, times_administered DESC;
--- QUERY 5
 SELECT
     a.plane_no,
     pm.model_name,
@@ -79,7 +72,6 @@ WHERE a.status != 'Retired'
 GROUP BY a.plane_no, pm.model_name, a.status, ts.test_name, ts.frequency_days
 HAVING days_overdue < 0
 ORDER BY days_overdue ASC;
--- QUERY 6
 SELECT
     h.hangar_no,
     h.location,
@@ -95,7 +87,6 @@ FROM Hangar h
 LEFT JOIN HangarStay hs ON h.hangar_no = hs.hangar_no
 GROUP BY h.hangar_no, h.location, h.hangar_type, h.capacity
 ORDER BY total_visits DESC;
--- QUERY 7
 SELECT
     pm.manufacturer,
     pm.model_name,
@@ -110,7 +101,6 @@ FROM PlaneModel pm
 LEFT JOIN Airplane a ON pm.model_id = a.model_id
 GROUP BY pm.manufacturer, pm.model_name, pm.category
 ORDER BY total_aircraft DESC;
--- QUERY 8
 SELECT
     e.full_name,
     tc.license_no,
@@ -131,7 +121,6 @@ JOIN Employee e ON tc.ssn = e.ssn
 WHERE DATEDIFF(CURDATE(), tc.last_medical_exam) > 300
    OR DATEDIFF(tc.license_expiry, CURDATE()) <= 90
 ORDER BY days_since_exam DESC;
--- QUERY 9
 SELECT
     pm.model_name,
     pm.manufacturer,
@@ -145,7 +134,6 @@ FROM PlaneModel pm
 LEFT JOIN TechnicianExpertise te ON pm.model_id = te.model_id
 GROUP BY pm.model_id, pm.model_name, pm.manufacturer
 ORDER BY num_technicians ASC;
--- QUERY 10
 SELECT
     ts.test_name,
     te.plane_no,
@@ -164,7 +152,6 @@ WHERE te.score = (
     WHERE te2.test_id = te.test_id
 )
 ORDER BY ts.test_name, te.score DESC;
--- QUERY 11
 SELECT
     DATE_FORMAT(te.event_date, '%Y-%m')     AS year_month,
     COUNT(te.event_id)                      AS tests_conducted,
@@ -177,7 +164,6 @@ FROM TestEvent te
 WHERE te.event_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
 GROUP BY DATE_FORMAT(te.event_date, '%Y-%m')
 ORDER BY year_month ASC;
--- QUERY 12
 SELECT
     a.plane_no,
     pm.manufacturer,
@@ -192,7 +178,6 @@ LEFT JOIN TestEvent te ON a.plane_no = te.plane_no
 WHERE te.event_id IS NULL
   AND a.status != 'Retired'
 ORDER BY age_years DESC;
--- QUERY 13
 SELECT
     DATE_FORMAT(f.scheduled_dep, '%Y-%m')           AS year_month,
     COUNT(*)                                         AS total_flights,
@@ -230,7 +215,6 @@ LEFT JOIN Technician t       ON e.ssn = t.ssn
 LEFT JOIN TrafficController tc ON e.ssn = tc.ssn
 GROUP BY e.department, role
 ORDER BY total_payroll DESC;
--- QUERY 15
 SELECT
     plane_no,
     model_name,
@@ -251,10 +235,7 @@ FROM (
     JOIN PlaneModel pm ON a.model_id   = pm.model_id
     JOIN Test ts       ON te.test_id   = ts.test_id
     WHERE te.passed = 0
-
     UNION
-
-    
     SELECT
         a.plane_no,
         pm.model_name,
@@ -267,8 +248,6 @@ FROM (
     WHERE a.status = 'Grounded'
 
     UNION
-
-  
     SELECT
         a.plane_no,
         pm.model_name,
